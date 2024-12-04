@@ -47,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Container(
+        width: double.infinity, // Tambahkan ini
+        height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/screen.png'),
