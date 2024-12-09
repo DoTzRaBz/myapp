@@ -8,9 +8,11 @@ import '../utils/size.dart';
 import 'package:myapp/database_helper.dart';
 
 class ChatScreen extends StatefulWidget {
-  final bool isAdminOrStaff; // Tambahkan parameter ini
+  final bool isAdminOrStaff;
+  final bool isCS; // Tambahkan parameter baru
 
-  const ChatScreen({Key? key, required this.isAdminOrStaff}) : super(key: key);
+  const ChatScreen({Key? key, this.isAdminOrStaff = false, this.isCS = false})
+      : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -26,53 +28,55 @@ class _ChatScreenState extends State<ChatScreen> {
   late GenerativeModel model;
 
   // List FAQ dengan desain yang lebih informatif
-List<Map<String, dynamic>> faqList = [
-  {
-    'question': 'Apa itu Tahura Bandung?',
-    'answer':
-        'Tahura Bandung (Taman Hutan Raya) adalah kawasan hutan lindung yang terletak di Bandung, Jawa Barat. Merupakan area konservasi dengan keanekaragaman hayati yang tinggi.'
-  },
-  {
-    'question': 'Destinasi apa saja yang ada di Tahura?',
-    'answer':
-        'Beberapa destinasi di Tahura Bandung meliputi: Kebun Raya Bandung, Jalur Pendakian, Area Perkemahan, Hutan Pinus, dan Spot Fotografi Alam.'
-  },
-  {
-    'question': 'Cara membuat akun di aplikasi?',
-    'answer':
-        'Anda dapat membuat akun melalui menu Register di aplikasi. Isi nama lengkap, email, dan password, lalu klik tombol Register.'
-  },
-  {
-    'question': 'Bagaimana cara melihat cuaca di Tahura?',
-    'answer':
-        'Gunakan fitur Weather di aplikasi. Anda akan melihat informasi suhu, kelembapan, dan kondisi cuaca terkini di kawasan Tahura Bandung.'
-  },
-  {
-    'question': 'Apa yang harus dilakukan untuk melihat event yang akan datang?',
-    'answer':
-        'Anda dapat mengunjungi fitur Event di aplikasi untuk melihat daftar event yang akan datang. Anda juga bisa menambah event baru melalui tombol tambah di halaman event.'
-  },
-  {
-    'question': 'Bagaimana cara menggunakan fitur chat dengan AI?',
-    'answer':
-        'Fitur Chat AI dapat diakses melalui tombol chat di halaman utama. Anda dapat mengajukan pertanyaan dan mendapatkan jawaban secara real-time.'
-  },
-  {
-    'question': 'Apakah saya bisa mengubah foto profil saya?',
-    'answer':
-        'Ya, Anda dapat mengubah foto profil Anda melalui halaman Profil. Cukup ketuk foto profil Anda dan pilih gambar dari galeri Anda.'
-  },
-  {
-    'question': 'Bagaimana cara mengakses peta lokasi POI?',
-    'answer':
-        'Anda dapat mengakses peta lokasi POI (Point of Interest) melalui menu Peta di aplikasi. Di sana, Anda akan melihat berbagai lokasi menarik di sekitar Tahura.'
-  },
-  {
-    'question': 'Apa yang harus dilakukan jika saya mengalami masalah saat menggunakan aplikasi?',
-    'answer':
-        'Jika Anda mengalami masalah, silakan coba untuk menutup dan membuka kembali aplikasi. Jika masalah berlanjut, hubungi customer service melalui menu Kontak.'
-  }
-];
+  List<Map<String, dynamic>> faqList = [
+    {
+      'question': 'Apa itu Tahura Bandung?',
+      'answer':
+          'Tahura Bandung (Taman Hutan Raya) adalah kawasan hutan lindung yang terletak di Bandung, Jawa Barat. Merupakan area konservasi dengan keanekaragaman hayati yang tinggi.'
+    },
+    {
+      'question': 'Destinasi apa saja yang ada di Tahura?',
+      'answer':
+          'Beberapa destinasi di Tahura Bandung meliputi: Kebun Raya Bandung, Jalur Pendakian, Area Perkemahan, Hutan Pinus, dan Spot Fotografi Alam.'
+    },
+    {
+      'question': 'Cara membuat akun di aplikasi?',
+      'answer':
+          'Anda dapat membuat akun melalui menu Register di aplikasi. Isi nama lengkap, email, dan password, lalu klik tombol Register.'
+    },
+    {
+      'question': 'Bagaimana cara melihat cuaca di Tahura?',
+      'answer':
+          'Gunakan fitur Weather di aplikasi. Anda akan melihat informasi suhu, kelembapan, dan kondisi cuaca terkini di kawasan Tahura Bandung.'
+    },
+    {
+      'question':
+          'Apa yang harus dilakukan untuk melihat event yang akan datang?',
+      'answer':
+          'Anda dapat mengunjungi fitur Event di aplikasi untuk melihat daftar event yang akan datang. Anda juga bisa menambah event baru melalui tombol tambah di halaman event.'
+    },
+    {
+      'question': 'Bagaimana cara menggunakan fitur chat dengan AI?',
+      'answer':
+          'Fitur Chat AI dapat diakses melalui tombol chat di halaman utama. Anda dapat mengajukan pertanyaan dan mendapatkan jawaban secara real-time.'
+    },
+    {
+      'question': 'Apakah saya bisa mengubah foto profil saya?',
+      'answer':
+          'Ya, Anda dapat mengubah foto profil Anda melalui halaman Profil. Cukup ketuk foto profil Anda dan pilih gambar dari galeri Anda.'
+    },
+    {
+      'question': 'Bagaimana cara mengakses peta lokasi POI?',
+      'answer':
+          'Anda dapat mengakses peta lokasi POI (Point of Interest) melalui menu Peta di aplikasi. Di sana, Anda akan melihat berbagai lokasi menarik di sekitar Tahura.'
+    },
+    {
+      'question':
+          'Apa yang harus dilakukan jika saya mengalami masalah saat menggunakan aplikasi?',
+      'answer':
+          'Jika Anda mengalami masalah, silakan coba untuk menutup dan membuka kembali aplikasi. Jika masalah berlanjut, hubungi customer service melalui menu Kontak.'
+    }
+  ];
   @override
   void initState() {
     super.initState();
@@ -166,8 +170,7 @@ List<Map<String, dynamic>> faqList = [
               });
             },
           ),
-          if (isFAQMode &&
-              widget.isAdminOrStaff) // Hanya tampilkan jika admin atau staff
+          if ((widget.isAdminOrStaff || widget.isCS) && isFAQMode)
             IconButton(
               icon: Icon(Icons.add, color: Colors.white),
               onPressed: _addFAQ,

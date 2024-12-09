@@ -21,23 +21,32 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    // Cek login
+    // Cetak untuk debugging
+    print('Login attempt - Email: $email, Password: $password');
+
+    // Cek login 
     final isValidUser = await dbHelper.loginUser(email, password);
+    
+    // Tambahkan logging untuk memahami proses
+    print('Login validation result: $isValidUser');
+
     if (isValidUser) {
-      // Simpan email ke SharedPreferences
+      // Simpan email ke SharedPreferences 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userEmail', email);
 
       final userRole = await dbHelper.getUserRole(email);
+      print('User Role: $userRole'); // Tambahkan logging peran
 
-      if (userRole == 'admin' || userRole == 'staff') {
+      // Modifikasi navigasi untuk mendukung CS
+      if (userRole == 'admin' || userRole == 'staff' || userRole == 'cs') {
         Navigator.pushReplacementNamed(context, '/home', arguments: email);
       } else {
         Navigator.pushReplacementNamed(context, '/home', arguments: email);
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid email or password.')),
+      ScaffoldMessenger.of(context).showSnackBar( 
+        const SnackBar(content: Text('Invalid email or password.')), 
       );
     }
   }

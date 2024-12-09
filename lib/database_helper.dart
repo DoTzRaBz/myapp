@@ -89,10 +89,10 @@ class DatabaseHelper {
     });
 
     await db.insert('users', {
-      'name': 'Staff',
-      'email': 'staff',
-      'password': 'staff',
-      'role': 'staff',
+      'name': 'Customer Service',
+      'email': 'cs',
+      'password': 'cs',
+      'role': 'cs', // Gunakan role berbeda untuk CS
     });
 
     // Tabel untuk FAQ
@@ -143,165 +143,162 @@ class DatabaseHelper {
     });
 
     final userBatch = [
-    {
-      'name': 'John Doe',
-      'email': 'john.doe@gmail.com',
-      'password': 'password123',
-      'role': 'user',
-      'profile_image': ''
-    },
-    {
-      'name': 'Jane Smith',
-      'email': 'jane.smith@gmail.com',
-      'password': 'password456',
-      'role': 'user',
-      'profile_image': ''
-    },
-    {
-      'name': 'Mike Johnson',
-      'email': 'mike.johnson@gmail.com',
-      'password': 'password789',
-      'role': 'user',
-      'profile_image': ''
-    },
-    {
-      'name': 'Sarah Williams',
-      'email': 'sarah.williams@gmail.com',
-      'password': 'password101',
-      'role': 'user',
-      'profile_image': ''
-    },
-    {
-      'name': 'David Brown',
-      'email': 'david.brown@gmail.com',
-      'password': 'password202',
-      'role': 'user',
-      'profile_image': ''
-    },
-    {
-      'name': 'Emily Davis',
-      'email': 'emily.davis@gmail.com',
-      'password': 'password303',
-      'role': 'user',
-      'profile_image': ''
+      {
+        'name': 'John Doe',
+        'email': 'john.doe@gmail.com',
+        'password': 'password123',
+        'role': 'user',
+        'profile_image': ''
+      },
+      {
+        'name': 'Jane Smith',
+        'email': 'jane.smith@gmail.com',
+        'password': 'password456',
+        'role': 'user',
+        'profile_image': ''
+      },
+      {
+        'name': 'Mike Johnson',
+        'email': 'mike.johnson@gmail.com',
+        'password': 'password789',
+        'role': 'user',
+        'profile_image': ''
+      },
+      {
+        'name': 'Sarah Williams',
+        'email': 'sarah.williams@gmail.com',
+        'password': 'password101',
+        'role': 'user',
+        'profile_image': ''
+      },
+      {
+        'name': 'David Brown',
+        'email': 'david.brown@gmail.com',
+        'password': 'password202',
+        'role': 'user',
+        'profile_image': ''
+      },
+      {
+        'name': 'Emily Davis',
+        'email': 'emily.davis@gmail.com',
+        'password': 'password303',
+        'role': 'user',
+        'profile_image': ''
+      }
+    ];
+
+    // Batch insert untuk users
+    Batch batch = db.batch();
+    for (var user in userBatch) {
+      batch.insert('users', user, conflictAlgorithm: ConflictAlgorithm.replace);
     }
-  ];
+    await batch.commit(noResult: true);
 
-  // Batch insert untuk users
-  Batch batch = db.batch();
-  for (var user in userBatch) {
-    batch.insert('users', user, 
-      conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-  await batch.commit(noResult: true);
+    // Batch insert untuk transaksi
+    final dummyTransactions = [
+      {
+        'payment_method': 'debit',
+        'amount': 150000.0,
+        'transaction_date': '2023-12-15T10:30:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 1)',
+        'user_name': 'john.doe@gmail.com'
+      },
+      // Januari 2024
+      {
+        'payment_method': 'e-wallet',
+        'amount': 200000.0,
+        'transaction_date': '2024-01-20T14:45:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 3, Anak: 2)',
+        'user_name': 'jane.smith@gmail.com'
+      },
+      // Februari 2024
+      {
+        'payment_method': 'debit',
+        'amount': 100000.0,
+        'transaction_date': '2024-02-10T09:15:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 1, Anak: 1)',
+        'user_name': 'mike.johnson@gmail.com'
+      },
+      // Maret 2024
+      {
+        'payment_method': 'e-wallet',
+        'amount': 180000.0,
+        'transaction_date': '2024-03-05T16:20:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 2)',
+        'user_name': 'sarah.williams@gmail.com'
+      },
+      // April 2024
+      {
+        'payment_method': 'debit',
+        'amount': 220000.0,
+        'transaction_date': '2024-04-18T11:40:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 4, Anak: 1)',
+        'user_name': 'david.brown@gmail.com'
+      },
+      // Mei 2024
+      {
+        'payment_method': 'e-wallet',
+        'amount': 130000.0,
+        'transaction_date': '2024-05-22T13:55:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 1, Anak: 2)',
+        'user_name': 'emily.davis@gmail.com'
+      },
+      // Juni 2024
+      {
+        'payment_method': 'debit',
+        'amount': 170000.0,
+        'transaction_date': '2024-06-07T15:10:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 1)',
+        'user_name': 'john.doe@gmail.com'
+      },
+      // Juli 2024
+      {
+        'payment_method': 'e-wallet',
+        'amount': 190000.0,
+        'transaction_date': '2024-07-12T17:25:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 3, Anak: 1)',
+        'user_name': 'jane.smith@gmail.com'
+      },
+      // Agustus 2024
+      {
+        'payment_method': 'debit',
+        'amount': 140000.0,
+        'transaction_date': '2024-08-03T08:45:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 1, Anak: 2)',
+        'user_name': 'mike.johnson@gmail.com'
+      },
+      // September 2024
+      {
+        'payment_method': 'e-wallet',
+        'amount': 210000.0,
+        'transaction_date': '2024-09-16T12:30:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 3)',
+        'user_name': 'sarah.williams@gmail.com'
+      },
+      // Oktober 2024
+      {
+        'payment_method': 'debit',
+        'amount': 160000.0,
+        'transaction_date': '2024-10-25T14:15:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 1)',
+        'user_name': 'david.brown@gmail.com'
+      },
+      // November 2024
+      {
+        'payment_method': 'e-wallet',
+        'amount': 185000.0,
+        'transaction_date': '2024-11-08T16:50:00.000Z',
+        'product_name': 'Tiket Perjalanan (Dewasa: 3, Anak: 1)',
+        'user_name': 'emily.davis@gmail.com'
+      }
+    ];
 
-  // Batch insert untuk transaksi
-  final dummyTransactions = [
-    {
-      'payment_method': 'debit',
-      'amount': 150000.0,
-      'transaction_date': '2023-12-15T10:30:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 1)',
-      'user_name': 'john.doe@gmail.com'
-    },
-    // Januari 2024
-    {
-      'payment_method': 'e-wallet',
-      'amount': 200000.0,
-      'transaction_date': '2024-01-20T14:45:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 3, Anak: 2)',
-      'user_name': 'jane.smith@gmail.com'
-    },
-    // Februari 2024
-    {
-      'payment_method': 'debit',
-      'amount': 100000.0,
-      'transaction_date': '2024-02-10T09:15:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 1, Anak: 1)',
-      'user_name': 'mike.johnson@gmail.com'
-    },
-    // Maret 2024
-    {
-      'payment_method': 'e-wallet',
-      'amount': 180000.0,
-      'transaction_date': '2024-03-05T16:20:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 2)',
-      'user_name': 'sarah.williams@gmail.com'
-    },
-    // April 2024
-    {
-      'payment_method': 'debit',
-      'amount': 220000.0,
-      'transaction_date': '2024-04-18T11:40:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 4, Anak: 1)',
-      'user_name': 'david.brown@gmail.com'
-    },
-    // Mei 2024
-    {
-      'payment_method': 'e-wallet',
-      'amount': 130000.0,
-      'transaction_date': '2024-05-22T13:55:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 1, Anak: 2)',
-      'user_name': 'emily.davis@gmail.com'
-    },
-    // Juni 2024
-    {
-      'payment_method': 'debit',
-      'amount': 170000.0,
-      'transaction_date': '2024-06-07T15:10:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 1)',
-      'user_name': 'john.doe@gmail.com'
-    },
-    // Juli 2024
-    {
-      'payment_method': 'e-wallet',
-      'amount': 190000.0,
-      'transaction_date': '2024-07-12T17:25:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 3, Anak: 1)',
-      'user_name': 'jane.smith@gmail.com'
-    },
-    // Agustus 2024
-    {
-      'payment_method': 'debit',
-      'amount': 140000.0,
-      'transaction_date': '2024-08-03T08:45:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 1, Anak: 2)',
-      'user_name': 'mike.johnson@gmail.com'
-    },
-    // September 2024
-    {
-      'payment_method': 'e-wallet',
-      'amount': 210000.0,
-      'transaction_date': '2024-09-16T12:30:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 3)',
-      'user_name': 'sarah.williams@gmail.com'
-    },
-    // Oktober 2024
-    {
-      'payment_method': 'debit',
-      'amount': 160000.0,
-      'transaction_date': '2024-10-25T14:15:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 2, Anak: 1)',
-      'user_name': 'david.brown@gmail.com'
-    },
-    // November 2024
-    {
-      'payment_method': 'e-wallet',
-      'amount': 185000.0,
-      'transaction_date': '2024-11-08T16:50:00.000Z',
-      'product_name': 'Tiket Perjalanan (Dewasa: 3, Anak: 1)',
-      'user_name': 'emily.davis@gmail.com'
+    Batch transactionBatch = db.batch();
+    for (var transaction in dummyTransactions) {
+      transactionBatch.insert('transactions', transaction);
     }
-  ];
-
-  Batch transactionBatch = db.batch();
-  for (var transaction in dummyTransactions) {
-    transactionBatch.insert('transactions', transaction);
+    await transactionBatch.commit(noResult: true);
   }
-  await transactionBatch.commit(noResult: true);
-}
-
-  
 
   Future<void> _insertInitialPOIs(Database db) async {
     List<PointOfInterest> initialPOIs = [
@@ -438,13 +435,52 @@ class DatabaseHelper {
   }
 
   Future<bool> loginUser(String email, String password) async {
-    final Database db = await database;
-    final List<Map<String, dynamic>> results = await db.query(
-      'users',
-      where: 'email = ? AND password = ?',
-      whereArgs: [email, password],
-    );
-    return results.isNotEmpty;
+    final db = await database;
+
+    // Tambahkan logging yang lebih detail
+    print('Login Attempt:');
+    print('Email: $email');
+    print('Password: $password');
+
+    // Cetak semua users untuk debugging
+    final allUsers = await db.query('users');
+    print('All Users in Database:');
+    allUsers.forEach((user) {
+      print(
+          'User: ${user['email']}, Password: ${user['password']}, Role: ${user['role']}');
+    });
+
+    // Query untuk mencari user
+    final List<Map<String, dynamic>> users = await db.query('users',
+        where: 'email = ? AND password = ?', whereArgs: [email, password]);
+
+    print('Login Query Result:');
+    print('Users Found: ${users.length}');
+    if (users.isNotEmpty) {
+      print('Matched User Details: ${users.first}');
+    }
+
+    // Kembalikan true jika user ditemukan
+    return users.isNotEmpty;
+  }
+
+  Future<String?> getUserRole(String email) async {
+    final db = await database;
+
+    print('Fetching role for email: $email');
+
+    final List<Map<String, dynamic>> users = await db.query('users',
+        columns: ['role', 'email', 'password'],
+        where: 'email = ?',
+        whereArgs: [email]);
+
+    print('Role Query Result:');
+    print('Users Found: ${users.length}');
+    users.forEach((user) {
+      print('User: ${user['email']}, Role: ${user['role']}');
+    });
+
+    return users.isNotEmpty ? users.first['role'] : null;
   }
 
   Future<int> insertTransaction(String paymentMethod, double amount) async {
@@ -462,35 +498,35 @@ class DatabaseHelper {
   }
 
   Future<int> insertDetailedTransaction({
-  required String paymentMethod,
-  required double amount,
-  required String productName,
-  String? userName,
-  double discount = 0.0,
-  int? adultTickets,
-  int? childTickets,
-}) async {
-  final Database db = await database;
-  
-  // Gabungkan informasi tiket ke dalam product_name
-  String combinedProductName = productName;
-  if (adultTickets != null && childTickets != null) {
-    combinedProductName += ' (Dewasa: $adultTickets, Anak: $childTickets)';
-  }
+    required String paymentMethod,
+    required double amount,
+    required String productName,
+    String? userName,
+    double discount = 0.0,
+    int? adultTickets,
+    int? childTickets,
+  }) async {
+    final Database db = await database;
 
-  return await db.insert(
-    'transactions',
-    {
-      'payment_method': paymentMethod,
-      'amount': amount,
-      'product_name': combinedProductName,
-      'discount': discount,
-      'transaction_date': DateTime.now().toIso8601String(),
-      'user_name': userName,
-    },
-    conflictAlgorithm: ConflictAlgorithm.replace,
-  );
-}
+    // Gabungkan informasi tiket ke dalam product_name
+    String combinedProductName = productName;
+    if (adultTickets != null && childTickets != null) {
+      combinedProductName += ' (Dewasa: $adultTickets, Anak: $childTickets)';
+    }
+
+    return await db.insert(
+      'transactions',
+      {
+        'payment_method': paymentMethod,
+        'amount': amount,
+        'product_name': combinedProductName,
+        'discount': discount,
+        'transaction_date': DateTime.now().toIso8601String(),
+        'user_name': userName,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
   Future<int> insertFAQ(String question, String answer) async {
     final Database db = await database;
@@ -555,20 +591,6 @@ class DatabaseHelper {
               imageUrl: e['imageUrl'], // Gunakan nilai dari database
             ))
         .toList();
-  }
-
-  Future<String?> getUserRole(String email) async {
-    final Database db = await database;
-    final List<Map<String, dynamic>> results = await db.query(
-      'users',
-      columns: ['role'],
-      where: 'email = ?',
-      whereArgs: [email],
-    );
-
-    print('Query role untuk email $email: $results'); // Tambahkan logging
-
-    return results.isNotEmpty ? results.first['role'] : null;
   }
 
   Future<List<Map<String, dynamic>>> getTransactionsByDateRange(

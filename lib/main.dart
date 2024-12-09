@@ -3,7 +3,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
 import 'home_screen.dart';
-import 'home_staff.dart'; // Pastikan untuk mengimpor HomeStaff
 import 'profile_screen.dart';
 import 'map_screen.dart';
 import 'pages/chat_screen.dart';
@@ -41,8 +40,7 @@ class MyApp extends StatelessWidget {
           '/register': (context) => RegisterScreen(),
           '/home': (context) => HomeScreen(
               email: ModalRoute.of(context)!.settings.arguments as String),
-          '/home_staff': (context) =>
-              HomeStaff(), // Tambahkan rute untuk HomeStaff
+    
           '/profile': (context) => ProfileScreen(
               email: ModalRoute.of(context)!.settings.arguments as String),
           '/map': (context) {
@@ -52,13 +50,13 @@ class MyApp extends StatelessWidget {
             return OSMFlutterMap(
                 isAdminOrStaff: email == 'admin' || email == 'staff');
           },
-          '/chat': (context) {
-            final email = ModalRoute.of(context)!.settings.arguments
-                as String; // Ambil email dari argumen
-            return ChatScreen(
-                isAdminOrStaff:
-                    email == 'admin' || email == 'staff'); // Kirim info
-          },
+'/chat': (context) {
+  final email = ModalRoute.of(context)!.settings.arguments as String;
+  return ChatScreen(
+    isAdminOrStaff: email == 'admin' || email == 'staff',
+    isCS: email == 'cs'
+  );
+},
           '/weather': (context) => WeatherScreen(),
           '/ticket': (context) => TicketScreen(),
           '/event': (context) {

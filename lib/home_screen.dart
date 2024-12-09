@@ -24,11 +24,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _getUserRole() async {
-    String? role = await DatabaseHelper().getUserRole(widget.email);
-    setState(() {
-      userRole = role; // Menyimpan peran pengguna
-    });
-  }
+  String? role = await DatabaseHelper().getUserRole(widget.email);
+  setState(() {
+    userRole = role;
+    // Tambahkan kondisi untuk CS
+    if (userRole == 'cs') {
+      // Atur tampilan atau akses khusus untuk CS
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -171,14 +175,18 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 16),
 
             // Hanya tampilkan ikon Analisis untuk admin/staff
-            if (userRole == 'admin' || userRole == 'staff') ...[
-              _buildQuickAccessButton(
-                icon: Icons.analytics_outlined,
-                label: 'Analisis',
-                onTap: () => Navigator.pushNamed(context, '/analysis'),
+            if (userRole == 'admin' || userRole == 'staff' || userRole == 'cs') ...[
+            _buildQuickAccessButton(
+              icon: Icons.chat,
+              label: 'FAQ',
+              onTap: () => Navigator.pushNamed(
+                context, 
+                '/chat', 
+                arguments: widget.email
               ),
-              SizedBox(width: 16),
-            ],
+            ),
+          ],
+
 
             _buildQuickAccessButton(
               icon: Icons.confirmation_number_outlined,
